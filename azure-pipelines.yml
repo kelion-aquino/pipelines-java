@@ -3,21 +3,47 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
+parameters:
+- name: myObject
+  type: object
+  default:
+    foo: FOO
+    bar: BAR
+    things:
+    - one
+    - two
+    - three
+    nested:
+      one: apple
+      two: pear
+      count: 3
+
 trigger:
 - main
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
-  # - script: echo 'Hello World'
+# steps:
+# - task: Maven@3
+#   inputs:
+#     mavenPomFile: 'pom.xml'
+#     mavenOptions: '-Xmx3072m'
+#     javaHomeOption: 'JDKVersion'
+#     jdkVersionOption: '1.8'
+#     jdkArchitectureOption: 'x64'
+#     publishJUnitResults: true
+#     testResultsFiles: '**/surefire-reports/TEST-*.xml'
+#     goals: 'package'
+#   # - script: echo 'Hello World'
+
+jobs: 
+- job: object
+  steps:
+    - bash: echo ${{parameters.myObject.foo}}                     # echo object foo value
+    - bash: echo ${{parameters.myObject.things[1]}}               # echo one specific string value in array.
+    - bash: echo ${{parameters.myObject.nested.two}}              # echo nested object value
+    - ${{ each value in parameters.myObject.things }}:            # echo every string value in array.
+      - script: echo ${{ value }}
+    - ${{ each pair in parameters.myObject.nested }}:             # echo every nested object key and value
+      - script: echo "${{ pair.key }}, ${{ pair.value }}"
