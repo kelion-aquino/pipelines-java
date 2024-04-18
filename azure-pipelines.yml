@@ -59,7 +59,7 @@ jobs:
 
 - job: testCoverage
   steps:
-    - bash: echo ${{parameters.coverageThreshold.statements}}
-    - bash: echo ${{parameters.coverageThreshold.branches}}
-    - bash: echo ${{parameters.coverageThreshold.functions}}
-    - bash: echo ${{parameters.coverageThreshold.lines}}
+    - bash: echo ${{parameters.coverageThreshold.global.statements}}
+    - bash: echo ${{parameters.coverageThreshold.global.branches}}
+    - bash: echo ${{parameters.coverageThreshold.global.functions}}
+    - bash: echo ${{parameters.coverageThreshold.global.lines}}
