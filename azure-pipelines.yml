@@ -17,6 +17,15 @@ parameters:
       one: apple
       two: pear
       count: 3
+- name: coverageThreshold
+  displayName: "Code CoverageThreshold"
+  type: object
+  default:
+    global:
+      statements: 10
+      branches: 10
+      functions: 10
+      lines: 10
 
 trigger:
 - main
@@ -47,3 +56,10 @@ jobs:
       - script: echo ${{ value }}
     - ${{ each pair in parameters.myObject.nested }}:             # echo every nested object key and value
       - script: echo "${{ pair.key }}, ${{ pair.value }}"
+
+- job: testCoverage
+  steps:
+    - bash: echo ${{parameters.coverageThreshold.statements}}
+    - bash: echo ${{parameters.coverageThreshold.branches}}
+    - bash: echo ${{parameters.coverageThreshold.functions}}
+    - bash: echo ${{parameters.coverageThreshold.lines}}
